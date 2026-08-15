@@ -20,7 +20,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  font-family: 'Poppins', system-ui, sans-serif;
+  font-family: 'Poppins', 'Hind Siliguri', system-ui, sans-serif;
   color: var(--ink);
   background: var(--white);
   line-height: 1.6;
