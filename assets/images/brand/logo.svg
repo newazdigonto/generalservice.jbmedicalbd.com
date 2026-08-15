@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="JB Medical Center logo">
+  <defs>
+    <linearGradient id="jbBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#36b4e8"/>
+      <stop offset="100%" stop-color="#3150a3"/>
+    </linearGradient>
+    <linearGradient id="jbPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4d5daa"/>
+      <stop offset="100%" stop-color="#ac71b0"/>
+    </linearGradient>
+  </defs>
+  <!-- Top arm: represents "J" -->
+  <path d="M85 10 H115 V85 C115 110 96 128 71 128 H40 V98 H71 C79 98 85 92 85 85 Z" fill="url(#jbBlue)"/>
+  <!-- Left arm -->
+  <path d="M10 85 H85 V115 H40 C23 115 10 102 10 85 Z" fill="url(#jbPurple)"/>
+  <!-- Right arm -->
+  <path d="M115 85 H190 C190 104 174 120 155 120 C136 120 115 104 115 85 Z" fill="url(#jbPurple)"/>
+  <!-- Bottom arm: completes "J" curve -->
+  <path d="M85 115 H115 V190 C96 190 85 179 85 160 Z" fill="url(#jbBlue)"/>
+</svg>
