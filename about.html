@@ -39,7 +39,7 @@
       </ul>
     </nav>
     <div class="header-actions">
-      <a href="contact.html" class="btn btn-primary">Book Appointment</a>
+      <button type="button" class="btn btn-primary" data-open-appointment>Book Appointment</button>
       <button class="nav-toggle" aria-label="Toggle menu">☰</button>
     </div>
   </div>
@@ -160,6 +160,39 @@
     <span>General Service · Sonarpara, Sylhet</span>
   </div>
 </footer>
+<div class="modal-overlay" id="appointmentModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="modal-close" aria-label="Close">✕</button>
+    <h3 id="modalTitle">Book an Appointment</h3>
+    <p style="font-size:0.88rem;">Send your details and we'll confirm by phone.</p>
+    <form class="contact-form">
+      <div>
+        <label for="m-name">Full Name</label>
+        <input type="text" id="m-name" name="name" required>
+      </div>
+      <div>
+        <label for="m-phone">Phone Number</label>
+        <input type="tel" id="m-phone" name="phone" required>
+      </div>
+      <div>
+        <label for="m-service">Service Needed</label>
+        <select id="m-service" name="service">
+          <option>General Physician Consultation</option>
+          <option>Gynaecology &amp; Obstetrics</option>
+          <option>Pathology / Lab Test</option>
+          <option>X-Ray / Sonology</option>
+          <option>GCC Medical Checkup</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="m-message">Message</label>
+        <textarea id="m-message" name="message" rows="3" placeholder="Preferred date/time, symptoms, or questions"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Send Request</button>
+    </form>
+  </div>
+</div>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

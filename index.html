@@ -41,21 +41,30 @@
       </ul>
     </nav>
     <div class="header-actions">
-      <a href="contact.html" class="btn btn-primary">Book Appointment</a>
+      <button type="button" class="btn btn-primary" data-open-appointment>Book Appointment</button>
       <button class="nav-toggle" aria-label="Toggle menu">☰</button>
     </div>
   </div>
 </header>
 
 <section class="hero">
-  <div class="hero-photo"></div>
+  <div class="hero-photo">
+    <div class="hero-slide active" style="background-image:url('assets/images/facility/hero-banner.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('assets/images/facility/reception.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('assets/images/facility/doctor-consultation.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('assets/images/facility/lab.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('assets/images/facility/xray-room.jpg')"></div>
+    <button type="button" class="hero-arrow prev" aria-label="Previous slide">‹</button>
+    <button type="button" class="hero-arrow next" aria-label="Next slide">›</button>
+    <div class="hero-dots"></div>
+  </div>
   <div class="container hero-content">
     <span class="eyebrow">JB Medical Center · General Service</span>
     <h1>স্বল্প খরচে উন্নত সেবার প্রতিশ্রুতি</h1>
     <p class="lead">Our promise: advanced, compassionate healthcare at an affordable cost. Trusted general physicians, diagnostics, gynae &amp; obstetrics care, and GCC-approved overseas employment medical checkups — all under one roof in Sonarpara, Sylhet.</p>
     <div class="hero-cta">
       <a href="services.html" class="btn btn-primary">Explore Our Services →</a>
-      <a href="contact.html" class="btn btn-outline">Book Appointment</a>
+      <button type="button" class="btn btn-outline" data-open-appointment>Book Appointment</button>
     </div>
     <div class="hero-badges">
       <div class="hero-badge">✔ GCC / MOFA Approved Medical Center</div>
@@ -127,7 +136,7 @@
       <span class="eyebrow">Why JB Medical Center</span>
       <h2>We Care For You Like Family</h2>
       <p>From the reception desk to the consultation room, our team is here to make every visit simple, respectful, and unhurried — for patients of every age.</p>
-      <a href="contact.html" class="btn btn-ghost">Book an Appointment →</a>
+      <button type="button" class="btn btn-ghost" data-open-appointment>Book an Appointment →</button>
     </div>
     <div class="feature-photo" style="background-image:url('assets/images/facility/reception.jpg')"></div>
   </div>
@@ -175,6 +184,39 @@
     <span>General Service · Sonarpara, Sylhet</span>
   </div>
 </footer>
+<div class="modal-overlay" id="appointmentModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="modal-close" aria-label="Close">✕</button>
+    <h3 id="modalTitle">Book an Appointment</h3>
+    <p style="font-size:0.88rem;">Send your details and we'll confirm by phone.</p>
+    <form class="contact-form">
+      <div>
+        <label for="m-name">Full Name</label>
+        <input type="text" id="m-name" name="name" required>
+      </div>
+      <div>
+        <label for="m-phone">Phone Number</label>
+        <input type="tel" id="m-phone" name="phone" required>
+      </div>
+      <div>
+        <label for="m-service">Service Needed</label>
+        <select id="m-service" name="service">
+          <option>General Physician Consultation</option>
+          <option>Gynaecology &amp; Obstetrics</option>
+          <option>Pathology / Lab Test</option>
+          <option>X-Ray / Sonology</option>
+          <option>GCC Medical Checkup</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="m-message">Message</label>
+        <textarea id="m-message" name="message" rows="3" placeholder="Preferred date/time, symptoms, or questions"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Send Request</button>
+    </form>
+  </div>
+</div>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
