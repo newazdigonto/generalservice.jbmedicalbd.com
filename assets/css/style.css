@@ -20,10 +20,13 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  font-family: 'Poppins', 'Hind Siliguri', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--ink);
   background: var(--white);
   line-height: 1.6;
+}
+h1, h2, h3, h4, .brand-text strong, nav.main-nav a, .btn, .eyebrow, .stat strong {
+  font-family: 'Poppins', system-ui, sans-serif;
 }
 img { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
@@ -231,7 +234,6 @@ nav.main-nav a.active::after {
 }
 .doctor-body { padding: 1.4em 1.5em 1.6em; }
 .doctor-body h3 { margin-bottom: 0.1em; font-size: 1.05rem; }
-.doctor-body .bn-name { display: block; color: var(--ink-soft); font-size: 0.85rem; margin-bottom: 0.5em; }
 .doctor-body .cred { font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 0.6em; }
 .doctor-body .specialty { font-size: 0.85rem; color: var(--primary); font-weight: 500; margin-bottom: 0.4em; }
 .doctor-body .reg { font-size: 0.72rem; color: var(--ink-soft); opacity: 0.8; }
