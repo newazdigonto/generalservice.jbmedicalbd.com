@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  document.querySelectorAll('.footer-newsletter').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = form.querySelector('input[type="email"]').value.trim();
+      window.location.href = `mailto:info@jbmedicalbd.com?subject=${encodeURIComponent('Newsletter signup')}&body=${encodeURIComponent('Please subscribe: ' + email)}`;
+      form.reset();
+    });
+  });
+
   document.querySelectorAll('.contact-form').forEach((form) => {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
