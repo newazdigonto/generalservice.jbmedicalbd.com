@@ -10,10 +10,11 @@ export const metadata: Metadata = {
 export default async function BookAppointmentPage({
   searchParams,
 }: {
-  searchParams: Promise<{ service?: string; doctor?: string }>;
+  searchParams: Promise<{ service?: string; doctor?: string; type?: string }>;
 }) {
-  const { service, doctor } = await searchParams;
+  const { service, doctor, type } = await searchParams;
   const initialService = doctor ? `Consultation with ${doctor}` : service;
+  const bookingType = type === "test" ? "test" : "appointment";
 
   return (
     <section className="grid grid-cols-1 items-start gap-14 px-[6vw] py-15 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] sm:py-22.5">
@@ -28,7 +29,7 @@ export default async function BookAppointmentPage({
           Requests are confirmed by phone. For same-day tests, call {contact.phone}{" "}
           directly.
         </p>
-        <BookingForm initialService={initialService} />
+        <BookingForm initialService={initialService} type={bookingType} />
       </div>
       <div className="rounded-[18px] bg-bg-soft px-7.5 py-8.5">
         <div className="text-[17px] font-semibold">Visiting</div>

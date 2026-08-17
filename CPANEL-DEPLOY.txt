@@ -1,0 +1,252 @@
+====================================================================
+JB MEDICAL CENTER WEBSITE - HOW TO PUBLISH ON CPANEL
+====================================================================
+
+This site is a Next.js app (frontend + backend together) that needs
+Node.js and a MySQL database. Follow these steps in order.
+
+You will need:
+  - cPanel login for generalservice.jbmedicalbd.com
+  - "Setup Node.js App" available in cPanel (ask your host to enable
+    it if you don't see it)
+  - "MySQL Databases" available in cPanel
+  - Terminal / SSH access in cPanel (needed for steps 5 and 6). If you
+    don't have this, ask your hosting provider's support to run the
+    commands for you - it only takes them a few minutes.
+
+
+--------------------------------------------------------------------
+STEP 1 - CREATE THE MYSQL DATABASE
+--------------------------------------------------------------------
+1. In cPanel, open "MySQL Databases".
+2. Under "Create New Database", enter a name (e.g. jbmedical) and
+   click Create Database.
+3. Under "MySQL Users", create a new user with a strong password.
+4. Under "Add User to Database", add that user to the database you
+   just created, and tick "ALL PRIVILEGES".
+5. Write down these four values - you will need them in Step 4:
+     Database host   (usually: localhost)
+     Database name   (cPanel usually prefixes it, e.g. cpaneluser_jbmedical)
+     Database user   (also prefixed, e.g. cpaneluser_dbuser)
+     Database password
+
+6. In cPanel, open "phpMyAdmin". Select your new database on the
+   left. Click the "SQL" tab. Open the file named
+      sql/schema.sql
+   from this project on your computer, copy its entire contents,
+   paste them into the SQL box in phpMyAdmin, and click "Go".
+   This creates the "appointments", "doctors", and "admin_users"
+   tables the site and admin panel need.
+
+
+--------------------------------------------------------------------
+STEP 2 - UPLOAD THE PROJECT FILES
+--------------------------------------------------------------------
+1. On your computer, make a copy of this whole project folder, but
+   DO NOT include these (they are large/unnecessary and will be
+   rebuilt on the server):
+     node_modules/
+     .next/
+     .git/
+
+2. Zip that copy.
+
+3. In cPanel, open "File Manager". Go to your home directory (NOT
+   public_html - Node apps live outside the public web folder).
+   Create a folder, for example:
+     /home/yourusername/jbmedical
+
+4. Upload the zip into that folder and use File Manager's "Extract"
+   option to unzip it there.
+
+
+--------------------------------------------------------------------
+STEP 3 - CREATE THE NODE.JS APP
+--------------------------------------------------------------------
+1. In cPanel, open "Setup Node.js App".
+2. Click "Create Application".
+3. Fill in:
+     Node.js version:        20.x or newer (pick the highest available)
+     Application mode:       Production
+     Application root:       jbmedical              (the folder from Step 2)
+     Application URL:        your domain, e.g. generalservice.jbmedicalbd.com
+     Application startup file:   (leave blank for now - Step 7 sets this)
+4. Click "Create".
+
+
+--------------------------------------------------------------------
+STEP 4 - SET ENVIRONMENT VARIABLES
+--------------------------------------------------------------------
+Still on the Node.js App page for the app you just created, scroll to
+"Environment Variables" and add each of these (click "Add Variable"
+for each one):
+
+     DB_HOST                = localhost   (from Step 1)
+     DB_PORT                = 3306
+     DB_USER                = (from Step 1)
+     DB_PASSWORD             = (from Step 1)
+     DB_NAME                 = (from Step 1)
+     APPOINTMENTS_API_KEY    = (make up a long random password - your
+                                CRM will send this back to us to read
+                                appointments, so share it with whoever
+                                sets up the CRM side)
+     CRM_WEBHOOK_URL          = (the URL your CRM gave you to receive
+                                new appointments - leave blank if you
+                                don't have this yet, the site still
+                                works fine without it)
+     CRM_WEBHOOK_SECRET       = (only if your CRM asked for one)
+     ADMIN_SESSION_SECRET     = (a long random string that keeps admin
+                                panel logins secure - see the tip below)
+     UPLOADS_DIR              = /home/yourusername/jbmedical/uploads
+                                (use YOUR actual path from Step 2 -
+                                this is where doctor photos are saved;
+                                it must be OUTSIDE the .next folder so
+                                photos survive future rebuilds)
+
+   Tip for ADMIN_SESSION_SECRET: any long random string works. If you
+   have Terminal access already, you can generate one by running:
+     node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+   and pasting the result.
+
+Click "Save" after adding them.
+
+
+--------------------------------------------------------------------
+STEP 5 - INSTALL AND BUILD (needs Terminal/SSH)
+--------------------------------------------------------------------
+1. At the top of the Node.js App page, cPanel shows a line like:
+     source /home/yourusername/nodevenv/jbmedical/20/bin/activate && cd /home/yourusername/jbmedical
+   Copy that exact line - yours will have your own username/paths.
+
+2. Open cPanel "Terminal" (or connect over SSH).
+
+3. Paste the line you copied and press Enter. Your prompt should
+   now show the app's folder.
+
+4. Run:
+     npm install
+   Wait for it to finish (this can take a few minutes).
+
+5. Run:
+     npm run build
+   This compiles the site AND automatically copies the assets it
+   needs into .next/standalone - do not skip this step, and do not
+   try to run it on your own Windows computer and upload the result
+   instead (the images require a Linux-specific component that only
+   installs correctly when built on the server itself).
+
+
+--------------------------------------------------------------------
+STEP 6 - CREATE YOUR FIRST ADMIN PANEL LOGIN (needs Terminal/SSH)
+--------------------------------------------------------------------
+Still in the same Terminal session as Step 5, run:
+
+     node scripts/create-admin-user.mjs YOUR_USERNAME YOUR_PASSWORD administrator
+
+Replace YOUR_USERNAME and YOUR_PASSWORD with whatever you want to log
+in with (password must be at least 8 characters). This creates the
+"administrator" account - the only role that can create/remove other
+admin panel logins later from the Users page inside the panel itself.
+
+You can run this same command again any time to add more people, just
+change the role at the end to "admin" or "staff" instead of
+"administrator", e.g.:
+
+     node scripts/create-admin-user.mjs jane Str0ngPass! staff
+
+
+--------------------------------------------------------------------
+STEP 7 - POINT THE APP AT THE BUILT SERVER
+--------------------------------------------------------------------
+1. Back in "Setup Node.js App", click your app to edit it.
+2. Change "Application root" from
+     jbmedical
+   to
+     jbmedical/.next/standalone
+3. Set "Application startup file" to:
+     server.js
+4. Click "Save".
+5. Re-add the environment variables from Step 4 if the form cleared
+   them (they are attached to the app root, so changing the root can
+   sometimes reset the list - check before moving on).
+6. Click "Restart".
+
+
+--------------------------------------------------------------------
+STEP 8 - TEST IT
+--------------------------------------------------------------------
+1. Visit your domain in a browser. You should see the JB Medical
+   Center homepage.
+2. Click through Services, Health Checkup, Our Doctors, About, and
+   Book Appointment - check the pages look right.
+3. Fill in the Book Appointment form on the live site and submit it.
+4. In cPanel phpMyAdmin, open your database, click the "appointments"
+   table, and confirm your test submission appears as a new row.
+5. If you set CRM_WEBHOOK_URL in Step 4, check with whoever manages
+   the CRM that the test appointment arrived there too.
+6. Visit https://yourdomain.com/admin-login and sign in with the
+   account you created in Step 6. Confirm you can:
+     - see the Doctors, Appointments, and Test Booking menus
+     - add a doctor (with a photo) and see it appear on the public
+       /doctors page
+     - see your test booking from step 3 under Appointments (or
+       under Test Booking if it was a health-checkup package)
+
+
+--------------------------------------------------------------------
+UPDATING THE SITE LATER
+--------------------------------------------------------------------
+Whenever you (or a developer) change the code:
+  1. Upload the changed files into the jbmedical folder (the ORIGINAL
+     project root from Step 2, not the .next/standalone folder).
+  2. In Terminal, activate the app the same way as Step 5.1, then run:
+       npm install
+       npm run build
+  3. In "Setup Node.js App", click Restart on the app.
+
+Doctor photos and the admin_users/doctors database rows are NOT
+affected by this - they live in MySQL and in the UPLOADS_DIR folder,
+both of which sit outside the parts that get rebuilt.
+
+
+--------------------------------------------------------------------
+TROUBLESHOOTING
+--------------------------------------------------------------------
+Site shows a cPanel/Passenger error page:
+  - Double check Step 7: Application root must be the
+    ".../jbmedical/.next/standalone" folder, startup file "server.js".
+  - Click "Restart" after any change in Setup Node.js App.
+
+Book Appointment form says "Something went wrong":
+  - Recheck the DB_HOST / DB_USER / DB_PASSWORD / DB_NAME environment
+    variables from Step 4 - a typo here is the most common cause.
+  - Confirm sql/schema.sql was actually run in phpMyAdmin (Step 1.6).
+
+Images look broken or the build fails mentioning "sharp":
+  - This means the build was done on Windows and uploaded, instead of
+    being built on the server. Re-do Step 5 directly in cPanel
+    Terminal.
+
+/admin-login says "Invalid username or password":
+  - Re-run the command from Step 6 with the same username - it will
+    reset that account's password rather than erroring.
+  - Confirm ADMIN_SESSION_SECRET is set (Step 4) and you clicked
+    Restart afterwards.
+
+Doctor photos disappear after updating the site:
+  - UPLOADS_DIR (Step 4) must be an absolute path OUTSIDE
+    ".../jbmedical/.next" - if it points inside .next/standalone,
+    the next `npm run build` deletes it. Fix the env var, restart,
+    and re-upload the affected doctor photos from the admin panel.
+
+CRM never receives new appointments:
+  - Confirm CRM_WEBHOOK_URL is set correctly (Step 4) and that you
+    clicked Restart afterwards - environment variable changes need a
+    restart to take effect.
+  - As a backup, your CRM can instead fetch appointments itself by
+    calling:
+       GET https://yourdomain.com/api/appointments
+       header:  x-api-key: <the APPOINTMENTS_API_KEY you set>
+    which returns the appointments as JSON, newest first (add
+    &type=test or &type=appointment to the URL to fetch just one
+    kind of booking).

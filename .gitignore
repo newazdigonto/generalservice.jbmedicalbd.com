@@ -40,6 +40,9 @@ yarn-error.log*
 # original design source (kept locally for reference, not part of the app)
 /JB Medical Center website design/
 
+# locally uploaded doctor photos (production uploads live outside the repo, see UPLOADS_DIR)
+/uploads/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

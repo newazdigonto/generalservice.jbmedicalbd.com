@@ -39,13 +39,13 @@ export default function PackageTable() {
             <span className="text-muted">Packages</span>
             <div className="flex flex-wrap gap-2.5">
               <Link
-                href={`/book-appointment?service=${encodeURIComponent(name)}`}
+                href={`/book-appointment?type=test&service=${encodeURIComponent(name)}`}
                 className="border border-purple px-3.5 py-1.5 text-[12px] text-purple hover:bg-purple-soft"
               >
                 Show Price
               </Link>
               <Link
-                href={`/book-appointment?service=${encodeURIComponent(name)}`}
+                href={`/book-appointment?type=test&service=${encodeURIComponent(name)}`}
                 className="bg-purple px-3.5 py-1.5 text-[12px] text-white hover:bg-purple-dark"
               >
                 Add to Cart

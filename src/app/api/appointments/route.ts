@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { fullName, phone, service, preferredDate } = (body ?? {}) as Record<string, unknown>;
+  const { fullName, phone, service, preferredDate, type } = (body ?? {}) as Record<
+    string,
+    unknown
+  >;
 
   if (
     typeof fullName !== "string" ||
@@ -31,15 +34,23 @@ export async function POST(req: NextRequest) {
     service: typeof service === "string" ? service.trim().slice(0, 190) || null : null,
     preferredDate:
       typeof preferredDate === "string" ? preferredDate.trim().slice(0, 40) || null : null,
+    type: (type === "test" ? "test" : "appointment") as "appointment" | "test",
     sourcePath: req.headers.get("referer")?.slice(0, 190) ?? null,
   };
 
   let insertId: number;
   try {
     const [result] = await getPool().query(
-      `INSERT INTO appointments (full_name, phone, service, preferred_date, source_path)
-       VALUES (?, ?, ?, ?, ?)`,
-      [record.fullName, record.phone, record.service, record.preferredDate, record.sourcePath]
+      `INSERT INTO appointments (full_name, phone, service, preferred_date, type, source_path)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        record.fullName,
+        record.phone,
+        record.service,
+        record.preferredDate,
+        record.type,
+        record.sourcePath,
+      ]
     );
     insertId = (result as { insertId: number }).insertId;
   } catch (err) {
@@ -53,6 +64,7 @@ export async function POST(req: NextRequest) {
     phone: record.phone,
     service: record.service,
     preferredDate: record.preferredDate,
+    type: record.type,
     sourcePath: record.sourcePath,
     createdAt: new Date().toISOString(),
   });
@@ -74,6 +86,7 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const since = searchParams.get("since");
+  const type = searchParams.get("type");
   const limit = Math.min(Number(searchParams.get("limit") ?? 100) || 100, 500);
 
   const conditions: string[] = [];
@@ -82,11 +95,15 @@ export async function GET(req: NextRequest) {
     conditions.push("created_at > ?");
     params.push(since);
   }
+  if (type === "test" || type === "appointment") {
+    conditions.push("type = ?");
+    params.push(type);
+  }
   const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 
   const [rows] = await getPool().query<RowDataPacket[]>(
     `SELECT id, full_name AS fullName, phone, service, preferred_date AS preferredDate,
-            source_path AS sourcePath, crm_synced_at AS crmSyncedAt, created_at AS createdAt
+            type, source_path AS sourcePath, crm_synced_at AS crmSyncedAt, created_at AS createdAt
      FROM appointments ${where}
      ORDER BY created_at DESC
      LIMIT ?`,

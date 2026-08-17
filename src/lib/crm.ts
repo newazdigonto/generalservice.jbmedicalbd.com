@@ -4,6 +4,7 @@ export type AppointmentPayload = {
   phone: string;
   service: string | null;
   preferredDate: string | null;
+  type: "appointment" | "test";
   sourcePath: string | null;
   createdAt: string;
 };

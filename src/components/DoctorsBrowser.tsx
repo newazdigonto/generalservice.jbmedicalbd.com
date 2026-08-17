@@ -2,29 +2,41 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { doctorDepartments } from "@/data/site";
+import type { Doctor } from "@/lib/doctors";
 
 const ALPHABET = ["All", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")];
 
 export default function DoctorsBrowser({
+  doctors,
   initialDepartment,
 }: {
+  doctors: Doctor[];
   initialDepartment?: string;
 }) {
   const [name, setName] = useState("");
-  const [department, setDepartment] = useState(initialDepartment ?? "All");
+  const [category, setCategory] = useState(initialDepartment ?? "All");
+
+  const categories = useMemo(
+    () => Array.from(new Set(doctors.map((d) => d.category))).sort(),
+    [doctors]
+  );
 
   const groups = useMemo(() => {
-    return doctorDepartments
-      .filter((g) => department === "All" || g.name === department)
-      .map((g) => ({
-        ...g,
-        doctors: g.doctors.filter((d) =>
-          d.name.toLowerCase().includes(name.trim().toLowerCase())
-        ),
-      }))
-      .filter((g) => g.doctors.length > 0);
-  }, [name, department]);
+    const filtered = doctors.filter(
+      (d) =>
+        (category === "All" || d.category === category) &&
+        d.name.toLowerCase().includes(name.trim().toLowerCase())
+    );
+    const byCategory = new Map<string, Doctor[]>();
+    for (const doc of filtered) {
+      if (!byCategory.has(doc.category)) byCategory.set(doc.category, []);
+      byCategory.get(doc.category)!.push(doc);
+    }
+    return Array.from(byCategory.entries()).map(([cat, docs]) => ({
+      name: cat,
+      doctors: docs,
+    }));
+  }, [doctors, name, category]);
 
   return (
     <>
@@ -33,14 +45,14 @@ export default function DoctorsBrowser({
           <div>
             <div className="mb-1.5 text-[12.5px] text-muted">Search by Speciality</div>
             <select
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               className="w-full border border-purple bg-white px-3.5 py-3 text-[14px] text-faint"
             >
               <option value="All">Please Select</option>
-              {doctorDepartments.map((g) => (
-                <option key={g.name} value={g.name}>
-                  {g.name}
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
                 </option>
               ))}
             </select>
@@ -94,17 +106,24 @@ export default function DoctorsBrowser({
             <h2 className="mb-5.5 text-[26px] font-semibold sm:text-[34px]">{group.name}</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
               {group.doctors.map((doc) => (
-                <div key={doc.slug} className="border border-border">
-                  <div className="placeholder-media flex h-55 items-end justify-center p-3">
-                    <span className="font-mono text-[10.5px] text-[#6E6488]">
-                      [ portrait 600×720 ]
-                    </span>
-                  </div>
+                <div key={doc.id} className="border border-border">
+                  {doc.photoUrl ? (
+                    <div
+                      className="h-55 bg-cover bg-center"
+                      style={{ backgroundImage: `url(${doc.photoUrl})` }}
+                    />
+                  ) : (
+                    <div className="placeholder-media flex h-55 items-end justify-center p-3">
+                      <span className="font-mono text-[10.5px] text-[#6E6488]">
+                        [ portrait 600×720 ]
+                      </span>
+                    </div>
+                  )}
                   <div className="px-5 pt-5 pb-6">
                     <div className="text-[16px] font-semibold">{doc.name}</div>
-                    <div className="mt-1.5 text-[13px] text-faint">{doc.role}</div>
+                    <div className="mt-1.5 text-[13px] text-faint">{doc.category}</div>
                     <Link
-                      href={`/doctors/${doc.slug}`}
+                      href={`/doctors/${doc.id}`}
                       className="mt-4 inline-block border-b border-purple text-[12.5px] text-purple"
                     >
                       See Details
@@ -115,7 +134,12 @@ export default function DoctorsBrowser({
             </div>
           </div>
         ))}
-        {groups.length === 0 && (
+        {groups.length === 0 && doctors.length === 0 && (
+          <div className="text-[14px] text-faint">
+            Doctor profiles will appear here once they are added from the admin panel.
+          </div>
+        )}
+        {groups.length === 0 && doctors.length > 0 && (
           <div className="text-[14px] text-faint">No doctors match your search.</div>
         )}
       </div>

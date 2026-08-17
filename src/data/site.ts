@@ -162,35 +162,6 @@ export const departments = [
   },
 ];
 
-export type Doctor = {
-  slug: string;
-  name: string;
-  role: string;
-  department: string;
-};
-
-export const doctorDepartments: { name: string; doctors: Doctor[] }[] = [
-  {
-    name: "Family Medicine",
-    doctors: [1, 2, 3].map((n) => ({
-      slug: `family-medicine-${n}`,
-      name: "Dr. —",
-      role: "Specialty to be confirmed",
-      department: "Family Medicine",
-    })),
-  },
-  {
-    name: "Visiting Specialists",
-    doctors: [1, 2, 3].map((n) => ({
-      slug: `visiting-specialists-${n}`,
-      name: "Dr. —",
-      role: "Specialty to be confirmed",
-      department: "Visiting Specialists",
-    })),
-  },
-];
-
-export const allDoctors: Doctor[] = doctorDepartments.flatMap((g) => g.doctors);
 
 export const apartPoints = [
   {

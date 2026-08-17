@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import BackHome from "@/components/BackHome";
 import DoctorsBrowser from "@/components/DoctorsBrowser";
+import { listDoctors } from "@/lib/doctors";
 
 export const metadata: Metadata = {
   title: "Our Doctors — JB Medical Center",
@@ -15,6 +16,7 @@ export default async function DoctorsPage({
   searchParams: Promise<{ department?: string }>;
 }) {
   const { department } = await searchParams;
+  const doctors = await listDoctors();
 
   return (
     <section>
@@ -24,11 +26,10 @@ export default async function DoctorsPage({
         <h1 className="mt-6.5 text-[30px] font-semibold sm:text-[42px]">Our Doctors</h1>
         <p className="mt-3.5 max-w-[860px] text-[15.5px] leading-[1.7] text-body">
           At JB Medical Center, family medicine doctors and visiting specialists take
-          care of you. Send the names, specialties and chamber hours and these cards
-          will be filled in.
+          care of you.
         </p>
       </div>
-      <DoctorsBrowser initialDepartment={department} />
+      <DoctorsBrowser doctors={doctors} initialDepartment={department} />
     </section>
   );
 }

@@ -7,7 +7,7 @@ export default function HomePage() {
     <div>
       <section className="relative flex min-h-[460px] items-center justify-center bg-navy sm:min-h-[560px]">
         <Image
-          src="/images/reception-wide.jpg"
+          src="/images/reception-wide.png"
           alt="JB Medical Center reception"
           fill
           priority

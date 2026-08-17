@@ -6,8 +6,10 @@ type Status = "idle" | "submitting" | "success" | "error";
 
 export default function BookingForm({
   initialService,
+  type = "appointment",
 }: {
   initialService?: string;
+  type?: "appointment" | "test";
 }) {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -34,6 +36,7 @@ export default function BookingForm({
           phone: phone.trim(),
           service: service.trim(),
           preferredDate: preferredDate.trim(),
+          type,
         }),
       });
       if (!res.ok) throw new Error("Request failed");

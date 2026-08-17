@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <section>
-      <PageHero image="/images/reception-wide.jpg" alt="JB Medical Center" objectPosition="center 65%" />
+      <PageHero image="/images/reception-wide.png" alt="JB Medical Center" objectPosition="center 65%" />
 
       <div className="px-[6vw] pt-14 text-center">
         <h1 className="m-0 text-[30px] font-semibold sm:text-[42px]">Your Partner in Health</h1>

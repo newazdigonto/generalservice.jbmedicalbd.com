@@ -44,20 +44,20 @@ export default function HealthCheckupPage() {
                     <div className="text-[14px] font-semibold">Price: ৳ {check.price}</div>
                     <div className="mt-auto flex gap-2.5">
                       <Link
-                        href={`/book-appointment?service=${encodeURIComponent(check.name)}`}
+                        href={`/book-appointment?type=test&service=${encodeURIComponent(check.name)}`}
                         className="bg-purple px-4 py-2.5 text-[12.5px] text-white hover:bg-purple-dark"
                       >
                         Buy Now
                       </Link>
                       <Link
-                        href={`/book-appointment?service=${encodeURIComponent(check.name)}`}
+                        href={`/book-appointment?type=test&service=${encodeURIComponent(check.name)}`}
                         className="border border-purple px-4 py-2.5 text-[12.5px] text-purple hover:bg-purple-soft"
                       >
                         Add to Cart
                       </Link>
                     </div>
                     <Link
-                      href={`/book-appointment?service=${encodeURIComponent(check.name)}`}
+                      href={`/book-appointment?type=test&service=${encodeURIComponent(check.name)}`}
                       className="self-center border-b border-[#A99FC0] text-[12px] text-[#4A4468]"
                     >
                       See details
