@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --color-purple: #8e4ea8;
+  --color-purple-dark: #6c3489;
+  --color-purple-hover: #7a3d94;
+  --color-purple-soft: #f2e9f6;
+  --color-navy: #241e5a;
+  --color-ink: #2a2544;
+  --color-body: #565073;
+  --color-muted: #6a6483;
+  --color-faint: #7b7595;
+  --color-bg-soft: #f4f2f6;
+  --color-bg-soft-2: #f6f4f8;
+  --color-border: #e7e2ee;
+  --color-border-light: #edeaf1;
+  --color-border-input: #ddd6e6;
+  --color-accent: #4bbce6;
+}
+
+@theme inline {
+  --color-purple: var(--color-purple);
+  --color-purple-dark: var(--color-purple-dark);
+  --color-purple-hover: var(--color-purple-hover);
+  --color-purple-soft: var(--color-purple-soft);
+  --color-navy: var(--color-navy);
+  --color-ink: var(--color-ink);
+  --color-body: var(--color-body);
+  --color-muted: var(--color-muted);
+  --color-faint: var(--color-faint);
+  --color-bg-soft: var(--color-bg-soft);
+  --color-bg-soft-2: var(--color-bg-soft-2);
+  --color-border: var(--color-border);
+  --color-border-light: var(--color-border-light);
+  --color-border-input: var(--color-border-input);
+  --color-accent: var(--color-accent);
+  --font-sans: var(--font-poppins);
+  --font-mono: var(--font-plex-mono);
+}
+
+@layer base {
+  body {
+    background: #ffffff;
+    color: var(--color-ink);
+    font-family: var(--font-poppins), Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: var(--color-purple);
+  }
+}
+
+.placeholder-media {
+  background-image: repeating-linear-gradient(
+    115deg,
+    #ede7f2 0 14px,
+    #e2d9ea 14px 28px
+  );
+}
